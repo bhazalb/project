@@ -48,7 +48,7 @@ const HeroBanner = () => {
                     <input
                      type="text" 
                      placeholder="Bir film veya dizi arayın.."
-                     onChsnge={() => setQuery(e.target.value)}
+                     onChange={() => setQuery(e.target.value)}
                      onKeyUp={searchQeryHandler}
                     />
                      <button>Search</button>

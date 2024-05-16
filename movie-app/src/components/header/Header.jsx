@@ -19,6 +19,44 @@ const Header = () => {
     const navigate = useNavigate();
     const location = useLocation();
 
+     useEffect(() =>{
+      window.scrollTo(0,0);
+       } , [location]) 
+
+       
+    const controlNavbar = ()=> {
+     console.log(window.scrollY)
+     if(window.scrollY > 200) {
+        if(window.scrollY > lastScrollY && !mobileMenu )
+       {
+            setShow("hide");
+
+        }else{
+            setShow("show");
+        }
+    }
+         else{
+            setShow("top");
+        }
+        setLastScrollY(window.scrollY);
+     
+    };
+
+    useEffect(() => {
+        window.addEventListener("scroll", controlNavbar)
+        return ()=> {
+            window.addEventListener("scroll", controlNavbar)
+        }
+    }, [lastScrollY])
+
+    const searchQeryHandler = (event) => {
+        if(event.key == "Enter" && query.length > 0) {
+             navigate(`/search/${query}`);
+             setTimeout(() => {
+              setShowSearch(false);
+             }, 1000);
+        }
+      };
 
     const openSearch = ()=> {
         setMobileMenu(false)
@@ -28,7 +66,15 @@ const Header = () => {
         setMobileMenu(true)
         setShowSearch(false)
     }
-
+ 
+    const navigationHandler = (type) => {
+       if(type === "movie" ) {
+            navigate("/explore/movie");
+       } else{
+            navigate("/explore/tv");
+       }
+       setMobileMenu(false);
+    }
 
     return (
         <header  className={`header ${mobileMenu ? "mobilView" :
@@ -38,15 +84,15 @@ const Header = () => {
                     <img src="{logo}" alt="" />
                 </div>
                 <ul className="menuItems">
-                    <li className="menuItem" onClick={() => navigate("")}>Film</li>
-                    <li className="menuItem">TV Programı</li>
+                    <li className="menuItem" onClick={() => navigationHandler("movie")}>Film</li>
+                    <li className="menuItem" onClick={() => navigationHandler("tv")}>TV Programı</li>
                     <li className="menuItem">
-                        <HiOutlineSearch />
+                        <HiOutlineSearch onClick={openSearch(false)} />
                     </li>
                 </ul>
 
               <div className="mobileMenuItems">
-              <HiOutlineSearch />
+              <HiOutlineSearch onClick={openSearch} />
               {mobileMenu ? (<VscChromeClose onClick={()=>
                 setMobileMenu(false)
                }/>
@@ -57,22 +103,25 @@ const Header = () => {
               </div>
 
             </ContentWrapper>
+
+            { showSearch && (
             <div className="searchBar">
+              
                 <ContentWrapper>
                 <div className="searchInput">
                     <input
                      type="text" 
                      placeholder="Bir film veya dizi arayın.."
-                     onChsnge={() => setQuery(e.target.value)}
+                     onChange={() => setQuery(e.target.value)}
                      onKeyUp={searchQeryHandler}
                     />
                     <VscChromeClose onClick={()=>
-                setMobileMenu(false)
+                  setShowSearch(false)
                }/> 
                 </div>
                 </ContentWrapper>
             </div>
-
+              ) }
         </header>
     );
 };
