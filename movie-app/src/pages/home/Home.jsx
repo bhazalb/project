@@ -9,7 +9,7 @@ HeroBanner
 const Home = () => {
     return (
        <div className="homePage">
-        <HeroBanner></HeroBanner>
+        <HeroBanner />
        </div>
     )
 }
